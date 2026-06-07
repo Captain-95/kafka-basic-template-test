@@ -1,0 +1,53 @@
+#create kafka topic and configuration like partition number (with two kafka server is open and running - replication-factor):
+kafka-topics.bat --create --topic test --bootstrap-server localhost:9092 --partitions 4 --replication-factor 2
+
+to descrive a specific kafka topic :
+kafka-topics.bat --describe --topic test --bootstrap-server localhost:9092
+
+list of topic in kafka :
+kafka-topics.bat --list --bootstrap-server localhost:9092
+
+
+
+##################### PRODUCER CONFIG ##############################
+
+server:
+  port: 8081
+
+spring:
+  application:
+    name: test
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+
+
+
+
+ 
+##################### CONSUMER CONFIG ##############################
+
+server:
+  port: 8082
+
+spring:
+  application:
+    name: test
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: test-consumer-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: com.kafka.test.model
